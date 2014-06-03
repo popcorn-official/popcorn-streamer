@@ -4,14 +4,14 @@ var inherits = require('util').inherits
 var Streamer = require('./base');
 
 /* -- YouTube Streamer -- */
-function YoutubeStreamer(options) {
+function YoutubeStreamer(source, options) {
 	if(!(this instanceof YoutubeStreamer)) 
-		return new YoutubeStreamer(options);
-	
+		return new YoutubeStreamer(source, options);
+
 	Streamer.call(this, options);
 	var self = this;
 
-	var vid = ytdl('https://youtube.com/watch?v=3T2kChOed70');
+	var vid = ytdl(source);
 	vid.on('info', function(info, format) {
 		self._progress.setLength(format.size);
 	})

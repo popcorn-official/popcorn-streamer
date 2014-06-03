@@ -4,18 +4,18 @@ var inherits = require('util').inherits
 var Streamer = require('./base');
 
 /* -- HTTP Streamer -- */
-function HttpStreamer(options) {
+function HttpStreamer(source, options) {
 	if(!(this instanceof HttpStreamer)) 
-		return new HttpStreamer(options);
+		return new HttpStreamer(source, options);
 
-	Streamer.call(this);
+	Streamer.call(this, options);
 	var self = this;
 
 	this.request = request.defaults({
 		encoding: null
 	});
 
-	var req = this.request('http://slurm.trakt.us/images/fanart/1395.78.jpg');
+	var req = this.request(source);
 	req.on('response', function(res) {
 		var length = req.getHeader('content-length', res.headers);
 		if(length !== undefined)
