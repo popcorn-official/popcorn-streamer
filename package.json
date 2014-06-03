@@ -1,0 +1,24 @@
+{
+  "name": "popcorn-streamer",
+  "version": "0.1.0",
+  "description": "The streaming library used by Popcorn Time to stream different media sources",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/popcorn-official/popcorn-streamer.git"
+  },
+  "author": "XeonCore",
+  "license": "LGPL-3",
+  "bugs": {
+    "url": "https://github.com/popcorn-official/popcorn-streamer/issues"
+  },
+  "homepage": "https://github.com/popcorn-official/popcorn-streamer",
+  "dependencies": {
+    "extend": "^1.2.1",
+    "progress-stream": "^0.5.0",
+    "request": "^2.35.0",
+    "streamify": "^0.2.3",
+    "torrent-stream": "^0.10.2",
+    "ytdl": "^0.2.8"
+  }
+}
