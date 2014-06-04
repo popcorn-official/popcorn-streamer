@@ -12,6 +12,7 @@ function TorrentStreamer(source, options) {
 
 	Streamer.call(this, options);
 	var self = this;
+	options = options || {};
 
 	this._torrentStream = torrentStream(source, options.torrent);
 	this._torrentStream.on('uninterested', function() { self._torrentStream.swarm.pause() });
