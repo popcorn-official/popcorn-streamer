@@ -43,4 +43,12 @@ function Streamer(options) {
 }
 inherits(Streamer, PassThrough);
 
+Streamer.prototype.seek = function(start, end) {
+	// Virtual function, implemented in child
+}
+
+Streamer.prototype.destroy = function() {
+	// Virtual function, implemented in child
+}
+
 module.exports = Streamer;

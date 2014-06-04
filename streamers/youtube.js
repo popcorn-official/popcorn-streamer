@@ -10,13 +10,34 @@ function YoutubeStreamer(source, options) {
 
 	Streamer.call(this, options);
 	var self = this;
+	options = options || {};
 
-	var vid = ytdl(source, {quality: options.hd ? 22 : 18});
-	vid.on('info', function(info, format) {
+	this._options = options;
+	this._source = source;
+	this._video = ytdl(source, {quality: options.hd ? 22 : 18});
+	this._video.on('info', function(info, format) {
 		self._progress.setLength(format.size);
 	})
-	this._streamify.resolve(vid);
+	this._streamify.resolve(this._video);
 }
 inherits(YoutubeStreamer, Streamer);
+
+YoutubeStreamer.prototype.seek = function(start, end) {
+	var self = this;
+	start = start || 0;
+
+	this._video = ytdl(this._source, {quality: this._options.hd ? 22 : 18, range: start + '-' + (end !== undefined ? end : '')});
+	this._video.on('info', function(info, format) {
+		self._progress.setLength(format.size);
+	})
+
+	this._streamify.unresolve();
+	this._streamify.resolve(this._video);
+}
+
+YoutubeStreamer.prototype.destroy = function() {
+	this._streamify.unresolve();
+	this._video = null;
+}
 
 module.exports = YoutubeStreamer;

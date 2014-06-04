@@ -10,19 +10,50 @@ function HttpStreamer(source, options) {
 
 	Streamer.call(this, options);
 	var self = this;
+	options = options || {};
 
 	this.request = request.defaults({
 		encoding: null
 	});
 
-	var req = this.request(source);
-	req.on('response', function(res) {
-		var length = req.getHeader('content-length', res.headers);
+	this._options = options;
+	this._source = source;
+	this._req = this.request(source);
+	this._req.on('response', function(res) {
+		var length = self._req.getHeader('content-length', res.headers);
 		if(length !== undefined)
 			self._progress.setLength(parseInt(length));
 	})
-	this._streamify.resolve(req);
+	this._streamify.resolve(this._req);
 }
 inherits(HttpStreamer, Streamer);
+
+HttpStreamer.prototype.seek = function(start, end) {
+	var self = this;
+	start = start || 0;
+
+	if(this._req)
+		this._req.destroy();
+
+	this._req = this.request(this._source, {
+		headers: {
+			'Range': 'bytes=' + start + '-' + (end !== undefined ? end : '')
+		}
+	}).on('response', function(res) {
+		var length = self._req.getHeader('content-length', res.headers);
+		if(length !== undefined)
+			self._progress.setLength(parseInt(length));
+	})
+
+	this._streamify.unresolve();
+	this._streamify.resolve(this._req);
+}
+
+HttpStreamer.prototype.destroy = function() {
+	if(this._req)
+		this._req.destroy();
+	this._streamify.unresolve();
+	this._req = null;
+}
 
 module.exports = HttpStreamer;

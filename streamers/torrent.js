@@ -14,6 +14,8 @@ function TorrentStreamer(source, options) {
 	var self = this;
 	options = options || {};
 
+	this._ready = false;
+
 	this._torrentStream = torrentStream(source, options.torrent);
 	this._torrentStream.on('uninterested', function() { self._torrentStream.swarm.pause() });
 	this._torrentStream.on('interested',   function() { self._torrentStream.swarm.resume() });
@@ -30,8 +32,32 @@ function TorrentStreamer(source, options) {
 		self.file = self._torrentStream.files[index];
 		self._progress.setLength(self.file.length);
 		self._streamify.resolve(self.file.createReadStream());
+		self._ready = true;
 	})
 }
 inherits(TorrentStreamer, Streamer);
+
+TorrentStreamer.prototype.seek = function(start, end) {
+	if(!this._ready) return;
+
+	var opts = {
+		start: start
+	}
+
+	if(end !== undefined) {
+		opts.end = end;
+	}
+
+	this._streamify.unresolve();
+	this._streamify.resolve(this.file.createReadStream(opts));
+}
+
+TorrentStreamer.prototype.destroy = function() {
+	this._torrentStream.destroy();
+	this._streamify.unresolve();
+	this._ready = false;
+	this._torrentStream = null;
+	this.file = null;
+}
 
 module.exports = TorrentStreamer;
