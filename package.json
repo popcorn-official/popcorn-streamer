@@ -15,7 +15,9 @@
   "homepage": "https://github.com/popcorn-official/popcorn-streamer",
   "dependencies": {
     "extend": "^1.2.1",
+    "mime": "^1.2.11",
     "progress-stream": "^0.5.0",
+    "range-parser": "^1.0.0",
     "request": "^2.35.0",
     "streamify": "^0.2.3",
     "torrent-stream": "^0.10.2",
