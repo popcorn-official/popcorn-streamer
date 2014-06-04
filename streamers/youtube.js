@@ -23,6 +23,8 @@ function YoutubeStreamer(source, options) {
 inherits(YoutubeStreamer, Streamer);
 
 YoutubeStreamer.prototype.seek = function(start, end) {
+	if(this._destroyed) throw new ReferenceError('Streamer already destroyed');
+
 	var self = this;
 	start = start || 0;
 
@@ -36,8 +38,11 @@ YoutubeStreamer.prototype.seek = function(start, end) {
 }
 
 YoutubeStreamer.prototype.destroy = function() {
+	if(this._destroyed) throw new ReferenceError('Streamer already destroyed');
+
 	this._streamify.unresolve();
 	this._video = null;
+	this._destroyed = true;
 }
 
 module.exports = YoutubeStreamer;

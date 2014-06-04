@@ -17,6 +17,8 @@ function Streamer(options) {
 
 	PassThrough.call(this);
 
+	this._destroyed = false;
+
 	this.downloaded = 0;
 	this.progress = 0;
 	this.downloadSpeed = 0;

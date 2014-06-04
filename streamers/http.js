@@ -29,6 +29,8 @@ function HttpStreamer(source, options) {
 inherits(HttpStreamer, Streamer);
 
 HttpStreamer.prototype.seek = function(start, end) {
+	if(this._destroyed) throw new ReferenceError('Streamer already destroyed');
+	
 	var self = this;
 	start = start || 0;
 
@@ -50,10 +52,13 @@ HttpStreamer.prototype.seek = function(start, end) {
 }
 
 HttpStreamer.prototype.destroy = function() {
+	if(this._destroyed) throw new ReferenceError('Streamer already destroyed');
+
 	if(this._req)
 		this._req.destroy();
 	this._streamify.unresolve();
 	this._req = null;
+	this._destroyed = true;
 }
 
 module.exports = HttpStreamer;
