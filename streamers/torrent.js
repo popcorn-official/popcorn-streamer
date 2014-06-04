@@ -1,7 +1,5 @@
 var inherits = require('util').inherits
-  , mime = require('mime')
-  , torrentStream = require('torrent-stream')
-  , rangeParser = require('range-parser');
+  , torrentStream = require('torrent-stream');
 
 var Streamer = require('./base');
 

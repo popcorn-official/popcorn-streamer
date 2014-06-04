@@ -18,7 +18,7 @@ function HttpStreamer(source, options) {
 
 	this._options = options;
 	this._source = source;
-	this._req = this.request(source);
+	this._req = this.request(source, options.http);
 	this._req.on('response', function(res) {
 		var length = self._req.getHeader('content-length', res.headers);
 		if(length !== undefined)
